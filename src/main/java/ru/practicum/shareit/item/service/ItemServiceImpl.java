@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
         itemDto.setAvailable(itemDto.getAvailable() == null ? stored.getAvailable() : itemDto.getAvailable());
 
         if (isValid(itemDto)) {
-            return ItemMapper.toItemDto(itemStorage.update(ItemMapper.fromItemDto(itemDto), itemId));
+            return ItemMapper.toItemDto(itemStorage.update(itemDto, itemId));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
         }

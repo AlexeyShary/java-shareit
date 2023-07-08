@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(userDto.getEmail() == null ? stored.getEmail() : userDto.getEmail());
 
         if (isValid(userDto)) {
-            return UserMapper.toUserDto(userStorage.update(UserMapper.fromUserDto(userDto), userId));
+            return UserMapper.toUserDto(userStorage.update(userDto, userId));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
         }

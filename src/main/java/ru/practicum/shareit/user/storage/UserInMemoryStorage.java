@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.storage;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class UserInMemoryStorage implements UserStorage {
 
     @Override
     public User create(User user) {
-        if (isEmailUsed(user)) {
+        if (isEmailUsed(user.getId(), user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email уже занят");
         }
 
@@ -40,15 +41,15 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public User update(User user, long userId) {
-        if (isEmailUsed(user)) {
+    public User update(UserDto userDto, long userId) {
+        if (isEmailUsed(userDto.getId(), userDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email уже занят");
         }
 
         User stored = storageMap.get(userId);
 
-        stored.setName(user.getName());
-        stored.setEmail(user.getEmail());
+        stored.setName(userDto.getName());
+        stored.setEmail(userDto.getEmail());
 
         return stored;
     }
@@ -58,9 +59,9 @@ public class UserInMemoryStorage implements UserStorage {
         storageMap.remove(userId);
     }
 
-    private boolean isEmailUsed(User user) {
+    private boolean isEmailUsed(Long id, String email) {
         return storageMap.values().stream()
-                .filter(storedUser -> !storedUser.getId().equals(user.getId()))
-                .anyMatch(storedUser -> storedUser.getEmail().equalsIgnoreCase(user.getEmail()));
+                .filter(storedUser -> !storedUser.getId().equals(id))
+                .anyMatch(storedUser -> storedUser.getEmail().equalsIgnoreCase(email));
     }
 }

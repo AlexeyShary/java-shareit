@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.storage;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.HashMap;
@@ -48,12 +49,12 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public Item update(Item item, long itemId) {
+    public Item update(ItemDto itemDto, long itemId) {
         Item stored = storageMap.get(itemId);
 
-        stored.setName(item.getName());
-        stored.setDescription(item.getDescription());
-        stored.setAvailable(item.getAvailable());
+        stored.setName(itemDto.getName());
+        stored.setDescription(itemDto.getDescription());
+        stored.setAvailable(itemDto.getAvailable());
 
         return stored;
     }
