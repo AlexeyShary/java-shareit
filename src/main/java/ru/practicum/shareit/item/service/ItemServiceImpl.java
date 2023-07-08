@@ -70,10 +70,7 @@ public class ItemServiceImpl implements ItemService {
         itemDto.setDescription(itemDto.getDescription() == null ? stored.getDescription() : itemDto.getDescription());
         itemDto.setAvailable(itemDto.getAvailable() == null ? stored.getAvailable() : itemDto.getAvailable());
 
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<ItemDto>> violations = validator.validate(itemDto);
-
-        if (violations.isEmpty()) {
+        if (isValid(itemDto)) {
             return ItemMapper.toItemDto(itemStorage.update(ItemMapper.fromItemDto(itemDto), itemId));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
@@ -83,5 +80,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(long itemId) {
         itemStorage.delete(itemId);
+    }
+
+    private boolean isValid(ItemDto itemDto) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<ItemDto>> violations = validator.validate(itemDto);
+        return violations.isEmpty();
     }
 }

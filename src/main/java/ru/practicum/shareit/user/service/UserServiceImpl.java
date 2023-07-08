@@ -47,10 +47,7 @@ public class UserServiceImpl implements UserService {
         userDto.setName(userDto.getName() == null ? stored.getName() : userDto.getName());
         userDto.setEmail(userDto.getEmail() == null ? stored.getEmail() : userDto.getEmail());
 
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
-
-        if (violations.isEmpty()) {
+        if (isValid(userDto)) {
             return UserMapper.toUserDto(userStorage.update(UserMapper.fromUserDto(userDto), userId));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
@@ -60,5 +57,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(long userId) {
         userStorage.delete(userId);
+    }
+
+    private boolean isValid(UserDto userDto) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+        return violations.isEmpty();
     }
 }
