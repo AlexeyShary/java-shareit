@@ -22,7 +22,7 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public Item read(long itemId) {
+    public Item getById(long itemId) {
         if (!storageMap.containsKey(itemId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена");
         }
@@ -31,14 +31,14 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public Collection<Item> readByOwnerId(long userId) {
+    public Collection<Item> getByOwnerId(long userId) {
         return storageMap.values()
                 .stream()
                 .filter(item -> item.getOwner().getId() == userId)
                 .collect(Collectors.toList());
     }
 
-    public Collection<Item> searchByText(String searchText) {
+    public Collection<Item> getBySearchText(String searchText) {
         return storageMap.values()
                 .stream()
                 .filter(Item::getAvailable)

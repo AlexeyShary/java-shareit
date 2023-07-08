@@ -7,11 +7,11 @@ import java.util.Collection;
 public interface ItemStorage {
     Item create(Item item);
 
-    Item read(long itemId);
+    Item getById(long itemId);
 
-    Collection<Item> readByOwnerId(long userId);
+    Collection<Item> getByOwnerId(long userId);
 
-    Collection<Item> searchByText(String searchText);
+    Collection<Item> getBySearchText(String searchText);
 
     Item update(Item item, long itemId);
 

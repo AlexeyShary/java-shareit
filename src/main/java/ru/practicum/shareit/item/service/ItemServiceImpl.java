@@ -27,7 +27,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto create(ItemDto itemDto, long userId) {
-        User user = userStorage.read(userId);
+        User user = userStorage.getById(userId);
         Item item = ItemMapper.fromItemDto(itemDto);
 
         item.setOwner(user);
@@ -36,21 +36,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto read(long itemId) {
-        return ItemMapper.toItemDto(itemStorage.read(itemId));
+    public ItemDto getById(long itemId) {
+        return ItemMapper.toItemDto(itemStorage.getById(itemId));
     }
 
     @Override
-    public Collection<ItemDto> readByOwnerId(long userId) {
-        return itemStorage.readByOwnerId(userId).stream()
+    public Collection<ItemDto> getByOwnerId(long userId) {
+        return itemStorage.getByOwnerId(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<ItemDto> searchByText(String searchText) {
+    public Collection<ItemDto> getBySearchText(String searchText) {
         return searchText.isBlank() ? Collections.emptyList() :
-                itemStorage.searchByText(searchText)
+                itemStorage.getBySearchText(searchText)
                         .stream()
                         .map(ItemMapper::toItemDto)
                         .collect(Collectors.toList());
@@ -58,8 +58,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto update(ItemDto itemDto, long itemId, long userId) {
-        User user = userStorage.read(userId);
-        Item stored = itemStorage.read(itemId);
+        User user = userStorage.getById(userId);
+        Item stored = itemStorage.getById(itemId);
 
         if (!stored.getOwner().equals(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Редактирование вещи доступно только владельцу");

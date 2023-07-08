@@ -20,18 +20,18 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto read(@PathVariable long itemId) {
-        return itemService.read(itemId);
+    public ItemDto getById(@PathVariable long itemId) {
+        return itemService.getById(itemId);
     }
 
     @GetMapping
-    public Collection<ItemDto> readByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.readByOwnerId(userId);
+    public Collection<ItemDto> getByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
+        return itemService.getByOwnerId(userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchByText(@RequestParam(name = "text") String searchText) {
-        return itemService.searchByText(searchText);
+    public Collection<ItemDto> getBySearchText(@RequestParam(name = "text") String searchText) {
+        return itemService.getBySearchText(searchText);
     }
 
     @PatchMapping("/{itemId}")

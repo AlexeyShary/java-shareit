@@ -25,7 +25,7 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public User read(long userId) {
+    public User getById(long userId) {
         if (!storageMap.containsKey(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден");
         }
@@ -34,7 +34,7 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> readAll() {
+    public Collection<User> getAll() {
         return storageMap.values();
     }
 

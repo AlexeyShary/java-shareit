@@ -20,13 +20,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto read(@PathVariable long userId) {
-        return userService.read(userId);
+    public UserDto getById(@PathVariable long userId) {
+        return userService.getById(userId);
     }
 
     @GetMapping
-    public Collection<UserDto> readAll() {
-        return userService.readAll();
+    public Collection<UserDto> getAll() {
+        return userService.getAll();
     }
 
     @PatchMapping("/{userId}")

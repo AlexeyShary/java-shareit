@@ -7,9 +7,9 @@ import java.util.Collection;
 public interface UserStorage {
     User create(User user);
 
-    User read(long userId);
+    User getById(long userId);
 
-    Collection<User> readAll();
+    Collection<User> getAll();
 
     User update(User user, long userId);
 

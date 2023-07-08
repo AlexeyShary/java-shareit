@@ -28,20 +28,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto read(long userId) {
-        return UserMapper.toUserDto(userStorage.read(userId));
+    public UserDto getById(long userId) {
+        return UserMapper.toUserDto(userStorage.getById(userId));
     }
 
     @Override
-    public Collection<UserDto> readAll() {
-        return userStorage.readAll().stream()
+    public Collection<UserDto> getAll() {
+        return userStorage.getAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public UserDto update(UserDto userDto, long userId) {
-        User stored = userStorage.read(userId);
+        User stored = userStorage.getById(userId);
 
         userDto.setId(userId);
         userDto.setName(userDto.getName() == null ? stored.getName() : userDto.getName());

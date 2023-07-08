@@ -7,11 +7,11 @@ import java.util.Collection;
 public interface ItemService {
     ItemDto create(ItemDto itemDto, long userId);
 
-    ItemDto read(long itemId);
+    ItemDto getById(long itemId);
 
-    Collection<ItemDto> readByOwnerId(long userId);
+    Collection<ItemDto> getByOwnerId(long userId);
 
-    Collection<ItemDto> searchByText(String searchText);
+    Collection<ItemDto> getBySearchText(String searchText);
 
     ItemDto update(ItemDto itemDto, long itemId, long userId);
 
