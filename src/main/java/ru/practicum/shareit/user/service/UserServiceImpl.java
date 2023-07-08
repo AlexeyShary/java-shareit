@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<UserDto> getAll() {
+    public List<UserDto> getAll() {
         return userStorage.getAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toCollection(ArrayList::new));

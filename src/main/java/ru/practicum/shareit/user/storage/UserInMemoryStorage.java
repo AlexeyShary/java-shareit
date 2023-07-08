@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Repository
 public class UserInMemoryStorage implements UserStorage {
@@ -34,8 +35,8 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> getAll() {
-        return storageMap.values();
+    public List<User> getAll() {
+        return new ArrayList<>(storageMap.values());
     }
 
     @Override

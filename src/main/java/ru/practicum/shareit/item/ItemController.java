@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/items")
@@ -25,12 +25,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> getByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDto> getByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getByOwnerId(userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> getBySearchText(@RequestParam(name = "text") String searchText) {
+    public List<ItemDto> getBySearchText(@RequestParam(name = "text") String searchText) {
         return itemService.getBySearchText(searchText);
     }
 

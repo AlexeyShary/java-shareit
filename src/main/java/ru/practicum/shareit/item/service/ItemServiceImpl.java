@@ -14,8 +14,8 @@ import ru.practicum.shareit.user.storage.UserStorage;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,14 +41,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getByOwnerId(long userId) {
+    public List<ItemDto> getByOwnerId(long userId) {
         return itemStorage.getByOwnerId(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<ItemDto> getBySearchText(String searchText) {
+    public List<ItemDto> getBySearchText(String searchText) {
         return searchText.isBlank() ? Collections.emptyList() :
                 itemStorage.getBySearchText(searchText)
                         .stream()

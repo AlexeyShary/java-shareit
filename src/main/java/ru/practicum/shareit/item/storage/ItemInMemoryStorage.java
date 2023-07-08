@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
@@ -31,14 +31,14 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public Collection<Item> getByOwnerId(long userId) {
+    public List<Item> getByOwnerId(long userId) {
         return storageMap.values()
                 .stream()
                 .filter(item -> item.getOwner().getId() == userId)
                 .collect(Collectors.toList());
     }
 
-    public Collection<Item> getBySearchText(String searchText) {
+    public List<Item> getBySearchText(String searchText) {
         return storageMap.values()
                 .stream()
                 .filter(Item::getAvailable)
