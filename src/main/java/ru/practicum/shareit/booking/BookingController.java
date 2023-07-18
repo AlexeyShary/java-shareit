@@ -17,33 +17,33 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
-    public BookingResponseDto getById(@PathVariable long bookingId,
-                                      @RequestHeader("X-Sharer-User-Id") long userId) {
+    public BookingResponseDto getById(@PathVariable int bookingId,
+                                      @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.getById(bookingId, userId);
     }
 
     @GetMapping()
     public List<BookingResponseDto> getAllByState(@RequestParam(required = false, defaultValue = "ALL") @Valid RequestBookingStatus state,
-                                                  @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                  @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.getAllByState(state, userId);
     }
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getAllByStateForOwner(@RequestParam(required = false, defaultValue = "ALL") @Valid RequestBookingStatus state,
-                                                          @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                          @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.getAllByStateForOwner(state, userId);
     }
 
     @PostMapping
-    public BookingResponseDto create(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponseDto create(@RequestHeader("X-Sharer-User-Id") int userId,
                                      @Valid @RequestBody BookingRequestDto bookingRequestDto) {
         return bookingService.create(bookingRequestDto, userId);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingResponseDto approve(@PathVariable long bookingId,
+    public BookingResponseDto approve(@PathVariable int bookingId,
                                       @RequestParam boolean approved,
-                                      @RequestHeader("X-Sharer-User-Id") long userId) {
+                                      @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.approve(bookingId, approved, userId);
     }
 }

@@ -30,5 +30,5 @@ public class BookingRequestDto {
     }
 
     @NotNull(message = "ID вещи не может быть пустым")
-    private long itemId;
+    private Integer itemId;
 }

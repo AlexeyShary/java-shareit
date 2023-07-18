@@ -10,17 +10,17 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 public class ServiceUtil {
-    public static User getUserOrThrowNotFound(long id, UserRepository userRepository) {
+    public static User getUserOrThrowNotFound(int id, UserRepository userRepository) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
     }
 
-    public static Item getItemOrThrowNotFound(long id, ItemRepository itemRepository) {
+    public static Item getItemOrThrowNotFound(int id, ItemRepository itemRepository) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена"));
     }
 
-    public static Booking getBookingOrThrowNotFound(long id, BookingRepository bookingRepository) {
+    public static Booking getBookingOrThrowNotFound(int id, BookingRepository bookingRepository) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Бронирование не найдено"));
     }

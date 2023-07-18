@@ -31,7 +31,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookingResponseDto getById(long bookingId, long userId) {
+    public BookingResponseDto getById(int bookingId, int userId) {
         Booking booking = ServiceUtil.getBookingOrThrowNotFound(bookingId, bookingRepository);
         ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingResponseDto> getAllByState(RequestBookingStatus requestBookingStatus, long userId) {
+    public List<BookingResponseDto> getAllByState(RequestBookingStatus requestBookingStatus, int userId) {
         ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         switch (requestBookingStatus) {
@@ -79,7 +79,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingResponseDto> getAllByStateForOwner(RequestBookingStatus requestBookingStatus, long userId) {
+    public List<BookingResponseDto> getAllByStateForOwner(RequestBookingStatus requestBookingStatus, int userId) {
         ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         switch (requestBookingStatus) {
@@ -114,7 +114,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDto create(BookingRequestDto bookingRequestDto, long userId) {
+    public BookingResponseDto create(BookingRequestDto bookingRequestDto, int userId) {
         User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
         Item item = ServiceUtil.getItemOrThrowNotFound(bookingRequestDto.getItemId(), itemRepository);
 
@@ -136,7 +136,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDto approve(long bookingId, boolean approved, long userId) {
+    public BookingResponseDto approve(int bookingId, boolean approved, int userId) {
         Booking booking = ServiceUtil.getBookingOrThrowNotFound(bookingId, bookingRepository);
         ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 

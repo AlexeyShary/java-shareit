@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class BookingResponseDto {
-    private Long id;
+    private Integer id;
     private LocalDateTime start;
     private LocalDateTime end;
     private BookingStatus status;
@@ -19,13 +19,13 @@ public class BookingResponseDto {
     @Data
     @Builder
     public static class BookingResponseUserDto {
-        private Long id;
+        private Integer id;
     }
 
     @Data
     @Builder
     public static class BookingResponseItemDto {
-        private Long id;
+        private Integer id;
         private String name;
     }
 }

@@ -16,26 +16,26 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") int userId,
                           @Valid @RequestBody ItemDto itemDto) {
         return itemService.create(itemDto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@PathVariable long itemId,
-                                    @RequestHeader("X-Sharer-User-Id") long userId,
+    public CommentDto createComment(@PathVariable int itemId,
+                                    @RequestHeader("X-Sharer-User-Id") int userId,
                                     @Valid @RequestBody CommentDto commentDto) {
         return itemService.createComment(commentDto, userId, itemId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getById(@RequestHeader("X-Sharer-User-Id") long userId,
-                           @PathVariable long itemId) {
+    public ItemDto getById(@RequestHeader("X-Sharer-User-Id") int userId,
+                           @PathVariable int itemId) {
         return itemService.getById(userId, itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getAllByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDto> getAllByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId) {
         return itemService.getAllByOwnerId(userId);
     }
 
@@ -45,14 +45,14 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@PathVariable long itemId,
-                          @RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto update(@PathVariable int itemId,
+                          @RequestHeader("X-Sharer-User-Id") int userId,
                           @RequestBody ItemDto itemDto) {
         return itemService.update(itemDto, itemId, userId);
     }
 
     @DeleteMapping("/{itemId}")
-    public void delete(@PathVariable long itemId) {
+        public void delete(@PathVariable int itemId) {
         itemService.delete(itemId);
     }
 }

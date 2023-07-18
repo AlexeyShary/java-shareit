@@ -38,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto create(ItemDto itemDto, long userId) {
+    public ItemDto create(ItemDto itemDto, int userId) {
         User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         Item item = ItemMapper.fromDto(itemDto);
@@ -49,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public CommentDto createComment(CommentDto commentDto, long userId, long itemId) {
+    public CommentDto createComment(CommentDto commentDto, int userId, int itemId) {
         User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
         Item item = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
@@ -68,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemDto getById(long userId, long itemId) {
+    public ItemDto getById(int userId, int itemId) {
         Item item = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
         ItemDto itemDto = ItemMapper.toDto(item);
@@ -79,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> getAllByOwnerId(long userId) {
+    public List<ItemDto> getAllByOwnerId(int userId) {
         return itemRepository.findAllByOwnerId(userId).stream()
                 .map(ItemMapper::toDto)
                 .map(this::addBookingInfo)
@@ -102,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto update(ItemDto itemDto, long itemId, long userId) {
+    public ItemDto update(ItemDto itemDto, int itemId, int userId) {
         Item stored = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
         if (!stored.getOwner().getId().equals(userId)) {
@@ -126,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void delete(long itemId) {
+    public void delete(int itemId) {
         itemRepository.deleteById(itemId);
     }
 

@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getById(long userId) {
+    public UserDto getById(int userId) {
         return UserMapper.toDto(ServiceUtil.getUserOrThrowNotFound(userId, userRepository));
     }
 
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(UserDto userDto, long userId) {
+    public UserDto update(UserDto userDto, int userId) {
         User stored = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         Optional.ofNullable(userDto.getName()).ifPresent(stored::setName);
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(long userId) {
+    public void delete(int userId) {
         userRepository.deleteById(userId);
     }
 
