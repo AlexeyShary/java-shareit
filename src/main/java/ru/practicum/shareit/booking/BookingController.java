@@ -1,9 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.dto.RequestBookingStatus;
@@ -25,31 +23,15 @@ public class BookingController {
     }
 
     @GetMapping()
-    public List<BookingResponseDto> getAllByState(@RequestParam(required = false, defaultValue = "ALL") String state,
+    public List<BookingResponseDto> getAllByState(@RequestParam(required = false, defaultValue = "ALL") @Valid RequestBookingStatus state,
                                                   @RequestHeader("X-Sharer-User-Id") long userId) {
-        RequestBookingStatus requestBookingStatus;
-
-        try {
-            requestBookingStatus = RequestBookingStatus.valueOf(state.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown state: " + state);
-        }
-
-        return bookingService.getAllByState(requestBookingStatus, userId);
+        return bookingService.getAllByState(state, userId);
     }
 
     @GetMapping("/owner")
-    public List<BookingResponseDto> getAllByStateForOwner(@RequestParam(required = false, defaultValue = "ALL") String state,
+    public List<BookingResponseDto> getAllByStateForOwner(@RequestParam(required = false, defaultValue = "ALL") @Valid RequestBookingStatus state,
                                                           @RequestHeader("X-Sharer-User-Id") long userId) {
-        RequestBookingStatus requestBookingStatus;
-
-        try {
-            requestBookingStatus = RequestBookingStatus.valueOf(state.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown state: " + state);
-        }
-
-        return bookingService.getAllByStateForOwner(requestBookingStatus, userId);
+        return bookingService.getAllByStateForOwner(state, userId);
     }
 
     @PostMapping
