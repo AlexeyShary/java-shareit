@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.ServiceUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -39,9 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto getById(long userId) {
-        return userRepository.findById(userId)
-                .map(UserMapper::toDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        return UserMapper.toDto(ServiceUtil.getUserOrThrowNotFound(userId, userRepository));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto update(UserDto userDto, long userId) {
-        User stored = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        User stored = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         Optional.ofNullable(userDto.getName()).ifPresent(stored::setName);
         Optional.ofNullable(userDto.getEmail()).ifPresent(stored::setEmail);

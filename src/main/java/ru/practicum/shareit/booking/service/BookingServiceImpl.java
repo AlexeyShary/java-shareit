@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.ServiceUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,11 +32,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public BookingResponseDto getById(long bookingId, long userId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Бронирование не найдено"));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        Booking booking = ServiceUtil.getBookingOrThrowNotFound(bookingId, bookingRepository);
+        ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         if (!(booking.getUser().getId() == userId || booking.getItem().getOwner().getId() == userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не найдено подходящих бронирований для пользователя " + userId);
@@ -47,8 +45,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingResponseDto> getAllByState(RequestBookingStatus requestBookingStatus, long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         switch (requestBookingStatus) {
             case ALL:
@@ -83,8 +80,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingResponseDto> getAllByStateForOwner(RequestBookingStatus requestBookingStatus, long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         switch (requestBookingStatus) {
             case ALL:
@@ -119,10 +115,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDto create(BookingRequestDto bookingRequestDto, long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
-        Item item = itemRepository.findById(bookingRequestDto.getItemId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена"));
+        User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
+        Item item = ServiceUtil.getItemOrThrowNotFound(bookingRequestDto.getItemId(), itemRepository);
 
         if (!item.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Вещь недоступна для бронирования");
@@ -143,11 +137,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDto approve(long bookingId, boolean approved, long userId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Бронирование не найдено"));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        Booking booking = ServiceUtil.getBookingOrThrowNotFound(bookingId, bookingRepository);
+        ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         if (booking.getItem().getOwner().getId() != userId) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Подтверждение доступно только для владельца вещи");

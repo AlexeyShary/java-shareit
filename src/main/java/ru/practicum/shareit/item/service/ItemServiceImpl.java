@@ -19,6 +19,7 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.ServiceUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -38,8 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto create(ItemDto itemDto, long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
         Item item = ItemMapper.fromDto(itemDto);
         item.setOwner(user);
@@ -50,10 +50,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentDto createComment(CommentDto commentDto, long userId, long itemId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена"));
+        User user = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
+        Item item = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
         Comment comment = CommentMapper.fromDto(commentDto);
 
@@ -71,8 +69,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDto getById(long userId, long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена"));
+        Item item = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
         ItemDto itemDto = ItemMapper.toDto(item);
         itemDto = (item.getOwner().getId() == userId) ? addBookingInfo(itemDto) : itemDto;
@@ -106,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto update(ItemDto itemDto, long itemId, long userId) {
-        Item stored = itemRepository.findById(itemId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Вещь не найдена"));
+        Item stored = ServiceUtil.getItemOrThrowNotFound(itemId, itemRepository);
 
         if (!stored.getOwner().getId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Редактирование вещи доступно только владельцу");
