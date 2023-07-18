@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     item_id INT REFERENCES items (item_id) NOT NULL,
     booker_id INT REFERENCES users (user_id) NOT NULL,
-    status_id SMALLINT NOT NULL
+    status VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comments (
