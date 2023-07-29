@@ -1,62 +1,79 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.ServiceUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDto create(UserDto userDto) {
-        return UserMapper.toUserDto(userStorage.create(UserMapper.fromUserDto(userDto)));
+        User user = UserMapper.fromDto(userDto);
+        try {
+            return UserMapper.toDto(userRepository.save(user));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @Override
-    public UserDto getById(long userId) {
-        return UserMapper.toUserDto(userStorage.getById(userId));
+    @Transactional(readOnly = true)
+    public UserDto getById(int userId) {
+        return UserMapper.toDto(ServiceUtil.getUserOrThrowNotFound(userId, userRepository));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getAll() {
-        return userStorage.getAll().stream()
-                .map(UserMapper::toUserDto)
+        return userRepository.findAll().stream()
+                .map(UserMapper::toDto)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public UserDto update(UserDto userDto, long userId) {
-        User stored = userStorage.getById(userId);
+    @Transactional
+    public UserDto update(UserDto userDto, int userId) {
+        User stored = ServiceUtil.getUserOrThrowNotFound(userId, userRepository);
 
-        userDto.setId(userId);
-        userDto.setName(userDto.getName() == null ? stored.getName() : userDto.getName());
-        userDto.setEmail(userDto.getEmail() == null ? stored.getEmail() : userDto.getEmail());
+        Optional.ofNullable(userDto.getName()).ifPresent(stored::setName);
+        Optional.ofNullable(userDto.getEmail()).ifPresent(stored::setEmail);
 
-        if (isValid(userDto)) {
-            return UserMapper.toUserDto(userStorage.update(userDto, userId));
+        if (isValid(UserMapper.toDto(stored))) {
+            try {
+                return UserMapper.toDto(userRepository.save(stored));
+            } catch (DataIntegrityViolationException e) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
         }
     }
 
     @Override
-    public void delete(long userId) {
-        userStorage.delete(userId);
+    @Transactional
+    public void delete(int userId) {
+        userRepository.deleteById(userId);
     }
 
     private boolean isValid(UserDto userDto) {
