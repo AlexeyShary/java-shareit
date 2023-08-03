@@ -23,7 +23,7 @@ public class ItemRequestJsonTest {
     private JacksonTester<ItemRequestGetResponseDto> itemRequestGetResponseDtoJacksonTester;
 
     @Test
-    void ItemRequestCreateResponseDtoTest() throws Exception {
+    void itemRequestCreateResponseDtoTest() throws Exception {
         LocalDateTime timestamp = TestUtil.getCurrentTimeWithoutNano();
 
         ItemRequestCreateResponseDto itemRequestCreateResponseDto = ItemRequestCreateResponseDto.builder()
@@ -40,7 +40,7 @@ public class ItemRequestJsonTest {
     }
 
     @Test
-    void ItemRequestGetResponseDtoTest() throws Exception {
+    void itemRequestGetResponseDtoTest() throws Exception {
         LocalDateTime timestamp = TestUtil.getCurrentTimeWithoutNano();
 
         ItemRequestGetResponseDto itemRequestGetResponseDto = ItemRequestGetResponseDto.builder()

@@ -19,7 +19,7 @@ public class BookingJsonTest {
     private JacksonTester<BookingResponseDto> bookingResponseDtoJacksonTester;
 
     @Test
-    void BookingResponseDtoTest() throws Exception {
+    void bookingResponseDtoTest() throws Exception {
         LocalDateTime timestamp = TestUtil.getCurrentTimeWithoutNano();
         LocalDateTime startTimestamp = timestamp;
         LocalDateTime endTimestamp = timestamp.plusDays(1);
