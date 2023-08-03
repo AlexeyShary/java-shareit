@@ -23,6 +23,8 @@ public class ItemDto {
 
     private List<CommentDto> comments;
 
+    private Integer requestId;
+
     @Data
     @Builder
     public static class ItemBooking {
