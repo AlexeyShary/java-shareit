@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles("default")
+@ActiveProfiles("test")
 public class BookingIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +50,7 @@ public class BookingIntegrationTest {
     @Order(1)
     @Transactional
     @Rollback(false)
-    void CreateBookingTest() {
+    void createBookingTest() {
         User owner = getUser(1);
         User booker = getUser(2);
 
@@ -89,7 +89,7 @@ public class BookingIntegrationTest {
     @Test
     @Order(2)
     @Transactional
-    void PaginationTest() throws Exception {
+    void paginationTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/bookings/owner")
                         .param("state", "ALL")
                         .param("from", "0")
