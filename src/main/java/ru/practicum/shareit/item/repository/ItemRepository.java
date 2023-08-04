@@ -9,13 +9,13 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    Page<Item> findAllByOwnerId(int ownerId, Pageable pageable);
+    List<Item> findAllByOwnerId(int ownerId, Pageable pageable);
 
     @Query("select i from Item i " +
             "where (upper(i.name) like upper(concat('%', ?1, '%')) " +
             "or upper(i.description) like upper(concat('%', ?1, '%'))) " +
             "and i.available = true ")
-    Page<Item> findBySearchText(String searchText, Pageable pageable);
+    List<Item> findBySearchText(String searchText, Pageable pageable);
 
     List<Item> findAllByItemRequestId(int requestId);
 }

@@ -11,25 +11,25 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-    Page<Booking> findAllByUserIdOrderByStartDesc(int userId, Pageable pageable);
+    List<Booking> findAllByUserIdOrderByStartDesc(int userId, Pageable pageable);
 
-    Page<Booking> findAllByUserIdAndEndBeforeOrderByStartDesc(int userId, LocalDateTime endDateTime, Pageable pageable);
+    List<Booking> findAllByUserIdAndEndBeforeOrderByStartDesc(int userId, LocalDateTime endDateTime, Pageable pageable);
 
-    Page<Booking> findAllByUserIdAndStartAfterOrderByStartDesc(int userId, LocalDateTime startDateTime, Pageable pageable);
+    List<Booking> findAllByUserIdAndStartAfterOrderByStartDesc(int userId, LocalDateTime startDateTime, Pageable pageable);
 
-    Page<Booking> findAllByUserIdAndStartBeforeAndEndAfterOrderByStartDesc(int userId, LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
+    List<Booking> findAllByUserIdAndStartBeforeAndEndAfterOrderByStartDesc(int userId, LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
 
-    Page<Booking> findAllByUserIdAndStatusOrderByStartDesc(int userId, BookingStatus bookingStatus, Pageable pageable);
+    List<Booking> findAllByUserIdAndStatusOrderByStartDesc(int userId, BookingStatus bookingStatus, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdOrderByStartDesc(int ownerId, Pageable pageable);
+    List<Booking> findAllByItemOwnerIdOrderByStartDesc(int ownerId, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(int ownerId, LocalDateTime endDateTime, Pageable pageable);
+    List<Booking> findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(int ownerId, LocalDateTime endDateTime, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdAndStartAfterOrderByStartDesc(int ownerId, LocalDateTime startDateTime, Pageable pageable);
+    List<Booking> findAllByItemOwnerIdAndStartAfterOrderByStartDesc(int ownerId, LocalDateTime startDateTime, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(int ownerId, LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
+    List<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(int ownerId, LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdAndStatusOrderByStartDesc(int ownerId, BookingStatus status, Pageable pageable);
+    List<Booking> findAllByItemOwnerIdAndStatusOrderByStartDesc(int ownerId, BookingStatus status, Pageable pageable);
 
     List<Booking> findAllByItemId(int itemId);
 

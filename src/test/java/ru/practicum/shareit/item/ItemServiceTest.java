@@ -279,10 +279,10 @@ public class ItemServiceTest {
         Item item2 = getItem(11);
         item2.setOwner(owner);
 
-        Page<Item> itemPage = new PageImpl<>(Arrays.asList(
+        List<Item> itemList = Arrays.asList(
                 item1,
                 item2
-        ));
+        );
 
         Booking item1lastBooking = getBooking(100, booker, item1);
         item1lastBooking.setStart(LocalDateTime.now().minusDays(2));
@@ -308,7 +308,7 @@ public class ItemServiceTest {
                 comment2
         );
 
-        when(itemRepository.findAllByOwnerId(eq(owner.getId()), any(Pageable.class))).thenReturn(itemPage);
+        when(itemRepository.findAllByOwnerId(eq(owner.getId()), any(Pageable.class))).thenReturn(itemList);
         when(bookingRepository.findAllByItemId(eq(item1.getId()))).thenReturn(item1bookingList);
         when(bookingRepository.findAllByItemId(eq(item2.getId()))).thenReturn(new ArrayList<>());
         when(commentRepository.findAllByItemId(eq(item1.getId()))).thenReturn(item1commentList);
@@ -360,12 +360,12 @@ public class ItemServiceTest {
         Item item1 = getItem(1);
         Item item2 = getItem(2);
 
-        Page<Item> itemPage = new PageImpl<>(Arrays.asList(
+        List<Item> itemList = Arrays.asList(
                 item1,
                 item2
-        ));
+        );
 
-        when(itemRepository.findBySearchText(eq(searchText), any(Pageable.class))).thenReturn(itemPage);
+        when(itemRepository.findBySearchText(eq(searchText), any(Pageable.class))).thenReturn(itemList);
 
         List<ItemDto> resultDtoList = itemService.getAllBySearchText(searchText, 0, 10);
 

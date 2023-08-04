@@ -60,10 +60,10 @@ public class ItemRequestServiceTest {
         item2.setOwner(owner);
         item2.setItemRequest(itemRequest2);
 
-        Page<ItemRequest> itemRequestList = new PageImpl<>(Arrays.asList(
+        List<ItemRequest> itemRequestList = Arrays.asList(
                 itemRequest1,
                 itemRequest2
-        ));
+        );
 
         when(userRepository.findById(requestor.getId())).thenReturn(Optional.ofNullable(requestor));
         when(itemRequestRepository.findAllByRequestorIdOrderByCreatedDesc(eq(requestor.getId()), any(Pageable.class))).thenReturn(itemRequestList);
@@ -118,10 +118,10 @@ public class ItemRequestServiceTest {
         item2.setOwner(owner);
         item2.setItemRequest(itemRequest2);
 
-        Page<ItemRequest> itemRequestList = new PageImpl<>(Arrays.asList(
+        List<ItemRequest> itemRequestList = Arrays.asList(
                 itemRequest1,
                 itemRequest2
-        ));
+        );
 
         when(itemRequestRepository.findAllByRequestorIdNotOrderByCreatedDesc(eq(owner.getId()), any(Pageable.class))).thenReturn(itemRequestList);
         when(itemRepository.findAllByItemRequestId(eq(itemRequest1.getId()))).thenReturn(Arrays.asList(item1));
