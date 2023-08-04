@@ -1,12 +1,11 @@
 package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,7 +18,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
@@ -38,24 +37,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class ItemServiceTest {
-    @Autowired
-    private ItemService itemService;
+    @InjectMocks
+    private ItemServiceImpl itemService;
 
-    @MockBean
+    @Mock
     private ItemRepository itemRepository;
 
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
-    @MockBean
+    @Mock
     private BookingRepository bookingRepository;
 
-    @MockBean
+    @Mock
     private CommentRepository commentRepository;
 
-    @MockBean
+    @Mock
     private ItemRequestRepository itemRequestRepository;
 
     @Test
@@ -242,7 +241,6 @@ public class ItemServiceTest {
         );
 
         when(itemRepository.findById(eq(item.getId()))).thenReturn(Optional.ofNullable(item));
-        when(bookingRepository.findAllByItemId(eq(item.getId()))).thenReturn(bookingList);
         when(commentRepository.findAllByItemId(eq(item.getId()))).thenReturn(commentList);
 
         ItemDto resultDto = itemService.getById(notOwner.getId(), item.getId());
