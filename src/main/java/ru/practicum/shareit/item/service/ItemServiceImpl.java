@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.util.ServiceUtil;
@@ -35,6 +38,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     @Transactional
@@ -43,6 +47,11 @@ public class ItemServiceImpl implements ItemService {
 
         Item item = ItemMapper.fromDto(itemDto);
         item.setOwner(user);
+
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = ServiceUtil.getItemRequestOrThrowNotFound(itemDto.getRequestId(), itemRequestRepository);
+            item.setItemRequest(itemRequest);
+        }
 
         return ItemMapper.toDto(itemRepository.save(item));
     }
@@ -79,8 +88,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> getAllByOwnerId(int userId) {
-        return itemRepository.findAllByOwnerId(userId).stream()
+    public List<ItemDto> getAllByOwnerId(int userId, int from, int size) {
+        return itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size)).stream()
                 .map(ItemMapper::toDto)
                 .map(this::addBookingInfo)
                 .map(this::addComments)
@@ -90,12 +99,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> getAllBySearchText(String searchText) {
+    public List<ItemDto> getAllBySearchText(String searchText, int from, int size) {
         if (searchText.isBlank()) {
             return Collections.EMPTY_LIST;
         }
 
-        return itemRepository.findBySearchText(searchText).stream()
+        return itemRepository.findBySearchText(searchText, PageRequest.of(from, size)).stream()
                 .map(ItemMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -146,7 +155,6 @@ public class ItemServiceImpl implements ItemService {
                 .orElse(null);
         Booking lastBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                //.filter(booking -> booking.getStatus().equals(BookingStatus.APPROVED))
                 .max(Comparator.comparing(Booking::getEnd))
                 .orElse(null);
 
