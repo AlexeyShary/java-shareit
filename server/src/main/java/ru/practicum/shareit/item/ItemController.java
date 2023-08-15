@@ -6,8 +6,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -18,14 +16,14 @@ public class ItemController {
 
     @PostMapping
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") int userId,
-                          @Valid @RequestBody ItemDto itemDto) {
+                          @RequestBody ItemDto itemDto) {
         return itemService.create(itemDto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@PathVariable int itemId,
                                     @RequestHeader("X-Sharer-User-Id") int userId,
-                                    @Valid @RequestBody CommentDto commentDto) {
+                                    @RequestBody CommentDto commentDto) {
         return itemService.createComment(commentDto, userId, itemId);
     }
 
@@ -37,15 +35,15 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
-                                         @RequestParam(required = false, defaultValue = "0") @Min(0) int from,
-                                         @RequestParam(required = false, defaultValue = "20") @Min(1) int size) {
+                                         @RequestParam(required = false, defaultValue = "0") int from,
+                                         @RequestParam(required = false, defaultValue = "20") int size) {
         return itemService.getAllByOwnerId(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> getAllBySearchText(@RequestParam(name = "text") String searchText,
-                                            @RequestParam(required = false, defaultValue = "0") @Min(0) int from,
-                                            @RequestParam(required = false, defaultValue = "20") @Min(1) int size) {
+                                            @RequestParam(required = false, defaultValue = "0") int from,
+                                            @RequestParam(required = false, defaultValue = "20") int size) {
         return itemService.getAllBySearchText(searchText, from, size);
     }
 
