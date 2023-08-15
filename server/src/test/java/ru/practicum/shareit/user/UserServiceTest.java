@@ -128,26 +128,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateTest_InvalidDto() {
-        UserDto inputDto = UserDto.builder()
-                .email("invalidEmail")
-                .build();
-
-        User user = getUser(1);
-
-        when(userRepository.findById(eq(user.getId()))).thenReturn(Optional.ofNullable(user));
-
-        ResponseStatusException e = assertThrows(ResponseStatusException.class, () -> {
-            userService.update(inputDto, user.getId());
-        });
-
-        assertThat(e.getStatus(), equalTo(HttpStatus.BAD_REQUEST));
-
-        verify(userRepository, times(1)).findById(eq(user.getId()));
-        verifyNoMoreInteractions(userRepository);
-    }
-
-    @Test
     void updateTest_Conflict() {
         UserDto inputDto = UserDto.builder().build();
 

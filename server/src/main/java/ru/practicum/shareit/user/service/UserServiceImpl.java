@@ -12,13 +12,9 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.util.ServiceUtil;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,14 +55,10 @@ public class UserServiceImpl implements UserService {
         Optional.ofNullable(userDto.getName()).ifPresent(stored::setName);
         Optional.ofNullable(userDto.getEmail()).ifPresent(stored::setEmail);
 
-        if (isValid(UserMapper.toDto(stored))) {
-            try {
-                return UserMapper.toDto(userRepository.save(stored));
-            } catch (DataIntegrityViolationException e) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
+        try {
+            return UserMapper.toDto(userRepository.save(stored));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -74,11 +66,5 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(int userId) {
         userRepository.deleteById(userId);
-    }
-
-    private boolean isValid(UserDto userDto) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
-        return violations.isEmpty();
     }
 }

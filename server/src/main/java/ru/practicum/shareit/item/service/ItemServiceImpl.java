@@ -24,11 +24,11 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.util.ServiceUtil;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,14 +122,10 @@ public class ItemServiceImpl implements ItemService {
         Optional.ofNullable(itemDto.getDescription()).ifPresent(stored::setDescription);
         Optional.ofNullable(itemDto.getAvailable()).ifPresent(stored::setAvailable);
 
-        if (isValid(ItemMapper.toDto(stored))) {
-            try {
-                return ItemMapper.toDto(itemRepository.save(stored));
-            } catch (DataIntegrityViolationException e) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение для обновления");
+        try {
+            return ItemMapper.toDto(itemRepository.save(stored));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -137,12 +133,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void delete(int itemId) {
         itemRepository.deleteById(itemId);
-    }
-
-    private boolean isValid(ItemDto itemDto) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<ItemDto>> violations = validator.validate(itemDto);
-        return violations.isEmpty();
     }
 
     private ItemDto addBookingInfo(ItemDto itemDto) {

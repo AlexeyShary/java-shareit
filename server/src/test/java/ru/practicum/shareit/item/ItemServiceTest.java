@@ -439,29 +439,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    void updateTest_InvalidDto() {
-        ItemDto inputDto = ItemDto.builder()
-                .name("")
-                .build();
-
-        User owner = getUser(1);
-
-        Item item = getItem(10);
-        item.setOwner(owner);
-
-        when(itemRepository.findById(eq(item.getId()))).thenReturn(Optional.ofNullable(item));
-
-        ResponseStatusException e = assertThrows(ResponseStatusException.class, () -> {
-            itemService.update(inputDto, item.getId(), owner.getId());
-        });
-
-        assertThat(e.getStatus(), equalTo(HttpStatus.BAD_REQUEST));
-
-        verify(itemRepository, times(1)).findById(eq(item.getId()));
-        verifyNoMoreInteractions(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository);
-    }
-
-    @Test
     void updateTest_Conflict() {
         ItemDto inputDto = ItemDto.builder().build();
 
